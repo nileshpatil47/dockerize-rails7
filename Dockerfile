@@ -11,7 +11,8 @@ WORKDIR /rails
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development" \
+    SECRET_KEY_BASE="3b9985b7a0b2d071a7a60babf3f8dbc9"
 
 
 # Throw-away build stage to reduce size of final image
@@ -63,4 +64,6 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD ["./bin/rails", "server"]
+
+CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
+# CMD ["./bin/rails", "server"]
