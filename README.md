@@ -1,24 +1,96 @@
-# README
+# Read Me
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Start here: https://github.com/nileshpatil47/dockerize-rails7
 
-Things you may want to cover:
+# Rails 7 on Docker demo application
 
-* Ruby version
+This app demonstrates Rails 7 with Sqlite3, CRUD, all running in Docker.
 
-* System dependencies
+## Features
 
-* Configuration
+* Rails 7
+* Ruby 3
+* Dockerfile and Docker Compose configuration
+* Sqlite3 database
+* Redis
+* GitHub Actions for 
+  * tests
+  * Rubocop for linting
+  * Building and testing of a production Docker image
+* Dependabot for automated updates
 
-* Database creation
+## Requirements
 
-* Database initialization
+Please ensure you are using Docker Compose V2. This project relies on the `docker compose` command, not the previous `docker-compose` standalone program.
 
-* How to run the test suite
+https://docs.docker.com/compose/#compose-v2-and-the-new-docker-compose-command
 
-* Services (job queues, cache servers, search engines, etc.)
+Check your docker compose version with:
+```
+% docker compose version
+Docker Compose version v2.10.2
+```
 
-* Deployment instructions
+## Initial setup
+```
+cp .env.example .env
+docker compose build
+docker compose run --rm web bin/rails db:setup
+```
 
-* ...
+## Running the Rails app
+```
+docker compose up
+```
+
+## Running the Rails console
+When the app is already running with `docker-compose` up, attach to the container:
+```
+docker compose exec web bin/rails c
+```
+
+When no container running yet, start up a new one:
+```
+docker compose run --rm web bin/rails c
+```
+
+## Running tests
+```
+docker compose run --rm web bin/rspec
+```
+
+## Updating gems
+```
+docker compose run --rm web bundle update
+docker compose up --build
+```
+
+## Production build
+
+(adjust tags as needed)
+
+### with [BuildKit](https://docs.docker.com/build/buildkit/)
+```
+DOCKER_BUILDKIT=1 docker build --tag dockerize-rails7 --file Dockerfile . --load
+```
+
+### With legacy builder (no BuildKit)
+```
+docker build --tag dockerize-rails7 --file Dockerfile .
+```
+
+## Deployment
+
+This app can be hosted wherever Ruby is supported and Sqlite3 databases can be provisioned.
+
+#### Render
+
+NOTE: You will need to generate a production secret with `bin/rails secret` and set it as the `SECRET_KEY_BASE` environment variable.
+
+## Author
+
+**Nilesh Patil**
+
+- <https://twitter.com/nileshpatilIN>
+- <https://www.linkedin.com/in/nilesh-r-patil-5b486385/>
+- <https://github.com/nileshpatil47>
